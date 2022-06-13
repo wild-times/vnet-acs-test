@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ACS TESTING</title>
+</head>
+<body>
+
+    <div id="call-options">
+        <form name="join-call-form">
+            <h2>Join group call</h2>
+            <div>
+                <label for="yid">Your Identity</label>
+                <input type="text" id="yid" name="your-identity">
+            </div>
+            <div>
+                <label for="act">Your Access Token</label>
+                <input type="text" id="actg" name="access-token-group">
+            </div>
+            <div>
+                <label for="nm">Your Name</label>
+                <input type="text" id="nm" name="your-name">
+            </div>
+            <div>
+                <label for="grp-id">Enter Group ID to join call</label>
+                <input type="text" id="grp-id" name="group-id">
+            </div>
+            <input type="submit" value="Join Group Call">
+        </form>
+
+        <hr>
+
+        <form name="start-call-form">
+            <h2>Start call</h2>
+            <div>
+                <label for="act">Your Access Token</label>
+                <input type="text" id="act" name="access-token">
+            </div>
+            <div>
+                <label for="nms">Your Name</label>
+                <input type="text" id="nms" name="name-start">
+            </div>
+
+            <input type="submit" value="Start Call">
+        </form>
+        <hr>
+    </div>
+
+    <div id="call-bro">
+        <form>
+            <div>
+                <select id="cameras-x" name="cameras"></select>
+                <select id="mic-x" name="cameras"></select>
+            </div>
+        </form>
+
+        <div id="me">
+            <div>
+                <button id="cm">Commence bro</button>
+                <button id="wd">WILD BUTTON HERE</button>
+                <h2 id="wt">Status: Waiting for call</h2>
+            </div>
+        </div>
+        <div id="remotes"></div>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+</body>
+</html>

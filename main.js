@@ -85,8 +85,6 @@ async function callFormHandler (callEvent) {
                 // join group call
                 const call = callAgent.join({groupId: groupId}, placeCallOptions);
 
-                console.log(call);
-
                 wildButton.addEventListener('click', (wildEvent_) => {
                     wildEvent_.preventDefault();
                     call.hangUp();
@@ -96,6 +94,11 @@ async function callFormHandler (callEvent) {
                     document.getElementById('wt').innerText = call.state;
                 });
 
+                // participants now
+                call.on('remoteParticipantsUpdated', ({added, removed}) => {
+                    console.log('ADDED', added, Array.isArray(added));
+                    added.forEach((added_) => addRemoteParticipantToPage(added_));
+                });
             })
 
         } else {
@@ -103,6 +106,51 @@ async function callFormHandler (callEvent) {
         }
     }
 
+}
+
+
+async function addRemoteParticipantToPage (remoteParticipant) {
+    console.log("START ADD");
+    const videoStream = await remoteParticipant.videoStreams[0];
+    console.log("AFTER VIDEO STREAM");
+    console.log(videoStream.isAvailable, "STREAM ON TOP");
+    let view;
+
+    // create a to store the video
+    const rd = document.createElement('div');
+    const nameD = document.createElement('span');
+
+    // renderer
+    const rdRdr = new VideoStreamRenderer(videoStream);
+
+    // create the view and save it
+    const viewCreation = async () => {
+
+        view = await rdRdr.createView();
+        nameD.innerText = await remoteParticipant.displayName;
+        rd.appendChild(view.target);
+        rd.appendChild(nameD);
+        rd.id = await remoteParticipant.identifier.communicationUserId;
+        document.getElementById('remotes').appendChild(rd);
+        console.log(rd);
+    };
+
+    // remoteVideoStream.isAvailable
+    videoStream.on('isAvailableChanged', async () => {
+        console.log(videoStream.isAvailable, "STREAM STATUS INSIDE IS AVAILABLE CHANGED");
+        if (videoStream.isAvailable) {
+            await viewCreation();
+        }
+    });
+
+    if (videoStream.isAvailable) {
+        console.log(videoStream.isAvailable, "STREAM STATUS ON TOP");
+        try {
+            await viewCreation();
+        } catch (e) {
+            console.error(e, ">>>");
+        }
+    }
 }
 
 if (callForm) {

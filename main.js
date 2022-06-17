@@ -96,8 +96,10 @@ async function callFormHandler (callEvent) {
 
                 // participants now
                 call.on('remoteParticipantsUpdated', ({added, removed}) => {
-                    console.log('ADDED', added, Array.isArray(added));
-                    added.forEach((added_) => addRemoteParticipantToPage(added_));
+                    if (added.length || removed.length) {
+                        document.getElementById('remotes').innerHTML = '';
+                        call.remoteParticipants.forEach((part) => addRemoteParticipantToPage(part));
+                    };
                 });
             })
 
@@ -109,11 +111,8 @@ async function callFormHandler (callEvent) {
 }
 
 
-async function addRemoteParticipantToPage (remoteParticipant) {
-    console.log("START ADD");
+async function addRemoteParticipantToPage (remoteParticipant, ret = 2) {
     const videoStream = await remoteParticipant.videoStreams[0];
-    console.log("AFTER VIDEO STREAM");
-    console.log(videoStream.isAvailable, "STREAM ON TOP");
     let view;
 
     // create a to store the video
@@ -132,23 +131,24 @@ async function addRemoteParticipantToPage (remoteParticipant) {
         rd.appendChild(nameD);
         rd.id = await remoteParticipant.identifier.communicationUserId;
         document.getElementById('remotes').appendChild(rd);
-        console.log(rd);
     };
 
     // remoteVideoStream.isAvailable
     videoStream.on('isAvailableChanged', async () => {
-        console.log(videoStream.isAvailable, "STREAM STATUS INSIDE IS AVAILABLE CHANGED");
         if (videoStream.isAvailable) {
             await viewCreation();
         }
     });
 
     if (videoStream.isAvailable) {
-        console.log(videoStream.isAvailable, "STREAM STATUS ON TOP");
         try {
             await viewCreation();
         } catch (e) {
             console.error(e, ">>>");
+        }
+    } else {
+        if (ret > 0) {
+            await addRemoteParticipantToPage(remoteParticipant, ret--);
         }
     }
 }

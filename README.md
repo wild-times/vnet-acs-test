@@ -35,3 +35,4 @@ const others = call.remoteParticipants;
 ```
 
 ## GOOD LUCK UNDERSTANDING
+![LOOK HERE FOR SIMPLICITY](https://docs.microsoft.com/en-us/azure/communication-services/media/scenarios/architecture_v2_calling_join_client_driven.svg "Simple Graphic to show the working")
